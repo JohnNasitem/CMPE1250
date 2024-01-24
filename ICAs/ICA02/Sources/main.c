@@ -1,7 +1,7 @@
 /********************************************************************/
 // HC12 Program:  ICA02
 // Processor:     MC9S12XDP512
-// Bus Speed:     MHz
+// Bus Speed:     40 MHz
 // Author:        John N. Nasitem
 // Details:       A more detailed explanation of the program is entered here               
 // Date:          Date Created
@@ -22,14 +22,12 @@
 
 /********************************************************************/
 //Defines
-#define RED_LED 0b10000000
-#define GREEN_LED 0b0010000
 /********************************************************************/
 
 /********************************************************************/
 // Local Prototypes
-static void Red(unsigned int loop);
-static void Green(unsigned int loop);
+void RED(int loop);
+void GREEN(int loop);
 /********************************************************************/
 
 /********************************************************************/
@@ -54,8 +52,8 @@ void main(void)
   
 /********************************************************************/
   // one-time initializations
-  PT1AD1 |= RED_LED;
-  DDR1AD1 |= RED_LED;
+  PT1AD1 &= 0x1F;
+  DDR1AD1 = 0xE0;
   uiMainLoopCount = 0;
 /********************************************************************/
 
@@ -74,16 +72,16 @@ void main(void)
 
 /********************************************************************/
 // Functions
-static void Red(unsigned int loop) {
+void RED (loop) {
   if (loop < 0x1000) {
-    PT1AD1 |= (byte)(((UInt32)1 << (7)));
+    PT1AD1 |= 1 << 7;
   }
   else {
     PT1AD1 &= 0x7F;
   }
 }
 
-static void Green(unsigned int loop) {
+void GREEN (loop) {
   if (loop >= 0x1000) {
     PT1AD1 |= 0x20;
   }
