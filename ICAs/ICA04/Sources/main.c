@@ -1,12 +1,11 @@
 /********************************************************************/
-// HC12 Program:  YourProg - MiniExplanation
+// HC12 Program:  ICA04 - Flash Red LED
 // Processor:     MC9S12XDP512
-// Bus Speed:     MHz
-// Author:        This B. You
-// Details:       A more detailed explanation of the program is entered here               
-// Date:          Date Created
+// Bus Speed:     40 MHz
+// Author:        John N. Nasitem
+// Details:       Toggles Red LED every 1ms
+// Date:          Feb. 2/2024
 // Revision History :
-//  each revision will have a date + desc. of changes
 
 
 
@@ -32,6 +31,7 @@
 /********************************************************************/
 // Global Variables
 /********************************************************************/
+unsigned long delay;                      //delays the LED toggle
 
 /********************************************************************/
 // Constants
@@ -51,7 +51,9 @@ void main(void)
 /********************************************************************/
   // one-time initializations
 /********************************************************************/
-  PT1AD1
+  PT1AD1 &= 0x1F;
+  DDR1AD1 = 0xE0;
+  ATD1DIEN1 |= 0x1F;
 
 /********************************************************************/
   // main program loop
@@ -59,7 +61,12 @@ void main(void)
 
   for (;;)
   {
-
+      //Toggle LED
+      PT1AD1 ^= 0b10000000;
+      //Blocking delay
+      for (delay = 0; delay < 1333; delay++) { }
+      //Reset delay
+      delay = 0;
   }                   
 }
 
