@@ -1,0 +1,6 @@
+{
+    "files.associations": {
+        "sw_led.h": "c",
+        "derivative.h": "c"
+    }
+}
