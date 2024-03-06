@@ -1,40 +1,46 @@
 *** EVALUATION ***
-PROGRAM "C:\Users\jnasitem1\Documents\Repo\CMPE1250\ICAs\ICA06\bin\Project.abs"
+PROGRAM "C:\Users\Jcnas\OneDrive\Documents\Repos\CMPE1250\ICAs\ICA06\bin\Project.abs"
 
 *********************************************************************************************
 TARGET SECTION
 ---------------------------------------------------------------------------------------------
 Processor   : Freescale HC12
-Memory Model: SMALL
+Memory Model: BANKED
 File Format : ELF\DWARF 2.0
 Linker      : SmartLinker V-5.0.40 Build 10203, Jul 23 2010
 
 *********************************************************************************************
 FILE SECTION
 ---------------------------------------------------------------------------------------------
-main.c.o                                Model: SMALL,         Lang: ANSI-C
-Start12.c.o                             Model: SMALL,         Lang: ANSI-C
-mc9s12xdp512.c.o                        Model: SMALL,         Lang: ANSI-C
+mc9s12xdp512.c.o                        Model: BANKED,        Lang: ANSI-C
+main.c.o                                Model: BANKED,        Lang: ANSI-C
+Start12.c.o                             Model: BANKED,        Lang: ANSI-C
+rtshc12.c.o (ansixbi.lib)               Model: BANKED,        Lang: ANSI-C
+clock.c.o                               Model: BANKED,        Lang: ANSI-C
+SW_LED.c.o                              Model: BANKED,        Lang: ANSI-C
 
 *********************************************************************************************
 STARTUP SECTION
 ---------------------------------------------------------------------------------------------
-Entry point: 0xC029 (_Startup)
-_startupData is allocated at 0xC031 and uses 6 Bytes
+Entry point: 0xC000 (_Startup)
+_startupData is allocated at 0xC00F and uses 6 Bytes
 extern struct _tagStartup {
-  unsigned nofZeroOut     0
-  _Copy    *toCopyDownBeg 0xC058
+  unsigned nofZeroOut     1
+  _Range   pZeroOut       0x2100     8
+  _Copy    *toCopyDownBeg 0xC036
 } _startupData;
 
 *********************************************************************************************
 SECTION-ALLOCATION SECTION
 Section Name                    Size  Type     From       To       Segment
 ---------------------------------------------------------------------------------------------
-.init                             49     R     0xC000     0xC030   ROM_C000
-.startData                        34     R     0xC031     0xC052   ROM_C000
-.text                              5     R     0xC053     0xC057   ROM_C000
-.copy                              2     R     0xC058     0xC059   ROM_C000
+.init                             15     R     0xC000     0xC00E   ROM_C000
+.startData                        34     R     0xC00F     0xC030   ROM_C000
+NON_BANKED                         5     R     0xC031     0xC035   ROM_C000
+.copy                              8     R     0xC036     0xC03D   ROM_C000
+.text                            283     R   0xFE8000   0xFE811A   PAGE_FE
 .stack                           256   R/W     0x2000     0x20FF   RAM
+.data                              4   R/W     0x2100     0x2103   RAM
 .abs_section_8                     1   N/I        0x8        0x8   .absSeg0
 .abs_section_9                     1   N/I        0x9        0x9   .absSeg1
 .abs_section_a                     1   N/I        0xA        0xA   .absSeg2
@@ -682,35 +688,24 @@ Section Name                    Size  Type     From       To       Segment
 .abs_section_3aa                   2   N/I      0x3AA      0x3AB   .absSeg644
 .abs_section_3ac                   2   N/I      0x3AC      0x3AD   .absSeg645
 .abs_section_3ae                   2   N/I      0x3AE      0x3AF   .absSeg646
+.common                            4   R/W     0x2104     0x2107   RAM
 .vectSeg647_vect                   2     R     0xFFFE     0xFFFF   .vectSeg647
 
 Summary of section sizes per section type:
-READ_ONLY (R):          5C (dec:       92)
-READ_WRITE (R/W):      100 (dec:      256)
+READ_ONLY (R):         15B (dec:      347)
+READ_WRITE (R/W):      108 (dec:      264)
 NO_INIT (N/I):         300 (dec:      768)
 
 *********************************************************************************************
 VECTOR-ALLOCATION SECTION
     Address     InitValue   InitFunction
 ---------------------------------------------------------------------------------------------
-     0xFFFE        0xC029   _Startup
+     0xFFFE        0xC000   _Startup
 
 *********************************************************************************************
 OBJECT-ALLOCATION SECTION
      Name               Module                 Addr   hSize   dSize     Ref    Section   RLIB
 ---------------------------------------------------------------------------------------------
-MODULE:                 -- main.c.o --
-- PROCEDURES:
-     main                                      C053       5       5       1   .text       
-- VARIABLES:
-MODULE:                 -- Start12.c.o --
-- PROCEDURES:
-     Init                                      C000      29      41       1   .init       
-     _Startup                                  C029       8       8       0   .init       
-- VARIABLES:
-     _startupData                              C031       6       6       3   .startData  
-- LABELS:
-     __SEG_END_SSTACK                          2100       0       0       1               
 MODULE:                 -- mc9s12xdp512.c.o --
 - PROCEDURES:
 - VARIABLES:
@@ -746,12 +741,12 @@ MODULE:                 -- mc9s12xdp512.c.o --
      _PPAGE                                      30       1       1       0   .abs_section_30
      _PORTK                                      32       1       1       0   .abs_section_32
      _DDRK                                       33       1       1       0   .abs_section_33
-     _SYNR                                       34       1       1       0   .abs_section_34
-     _REFDV                                      35       1       1       0   .abs_section_35
-     _CRGFLG                                     37       1       1       0   .abs_section_37
+     _SYNR                                       34       1       1       4   .abs_section_34
+     _REFDV                                      35       1       1       4   .abs_section_35
+     _CRGFLG                                     37       1       1       1   .abs_section_37
      _CRGINT                                     38       1       1       0   .abs_section_38
-     _CLKSEL                                     39       1       1       0   .abs_section_39
-     _PLLCTL                                     3A       1       1       0   .abs_section_3a
+     _CLKSEL                                     39       1       1       2   .abs_section_39
+     _PLLCTL                                     3A       1       1       1   .abs_section_3a
      _RTICTL                                     3B       1       1       0   .abs_section_3b
      _COPCTL                                     3C       1       1       0   .abs_section_3c
      _ARMCOP                                     3F       1       1       0   .abs_section_3f
@@ -1267,7 +1262,7 @@ MODULE:                 -- mc9s12xdp512.c.o --
      _ATD1CTL01                                  80       2       2       0   .abs_section_80
      _ATD1CTL23                                  82       2       2       0   .abs_section_82
      _ATD1CTL45                                  84       2       2       0   .abs_section_84
-     _ATD1DIEN                                   8C       2       2       0   .abs_section_8c
+     _ATD1DIEN                                   8C       2       2       1   .abs_section_8c
      _ATD1PTAD                                   8E       2       2       0   .abs_section_8e
      _ATD1DR0                                    90       2       2       0   .abs_section_90
      _ATD1DR1                                    92       2       2       0   .abs_section_92
@@ -1303,8 +1298,8 @@ MODULE:                 -- mc9s12xdp512.c.o --
      _CAN2TXTSR                                 1FE       2       2       0   .abs_section_1fe
      _CAN3RXTSR                                 22E       2       2       0   .abs_section_22e
      _CAN3TXTSR                                 23E       2       2       0   .abs_section_23e
-     _PT01AD1                                   278       2       2       0   .abs_section_278
-     _DDR01AD1                                  27A       2       2       0   .abs_section_27a
+     _PT01AD1                                   278       2       2       5   .abs_section_278
+     _DDR01AD1                                  27A       2       2       1   .abs_section_27a
      _RDR01AD1                                  27C       2       2       0   .abs_section_27c
      _PER01AD1                                  27E       2       2       0   .abs_section_27e
      _CAN4RXTSR                                 2AE       2       2       0   .abs_section_2ae
@@ -1361,23 +1356,63 @@ MODULE:                 -- mc9s12xdp512.c.o --
      _XGR5                                      3AA       2       2       0   .abs_section_3aa
      _XGR6                                      3AC       2       2       0   .abs_section_3ac
      _XGR7                                      3AE       2       2       0   .abs_section_3ae
+MODULE:                 -- main.c.o --
+- PROCEDURES:
+     main                                    FE8000      4E      78       2   .text       
+- VARIABLES:
+     delay                                     2104       4       4       8   .common     
+MODULE:                 -- Start12.c.o --
+- PROCEDURES:
+     Init                                    FE804E      29      41       2   .text       
+     _Startup                                  C000       F      15       0   .init       
+- VARIABLES:
+     _startupData                              C00F       6       6       3   .startData  
+- LABELS:
+     __SEG_END_SSTACK                          2100       0       0       1               
+MODULE:                 -- rtshc12.c.o (ansixbi.lib) --
+- PROCEDURES:
+     _LINC                                     C031       5       5       1   NON_BANKED  
+- VARIABLES:
+MODULE:                 -- clock.c.o --
+- PROCEDURES:
+     Clock_EnableOutput                      FE8077      37      55       2   .text       
+     Clock_Set8MHZ                           FE80AE      13      19       2   .text       
+     Clock_Set20MHZ                          FE80C1      12      18       2   .text       
+     Clock_Set24MHZ                          FE80D3      12      18       2   .text       
+     Clock_Set40MHZ                          FE80E5      12      18       2   .text       
+- VARIABLES:
+     busSpeed                                  2100       4       4       8   .data       
+MODULE:                 -- SW_LED.c.o --
+- PROCEDURES:
+     SWL_Init                                FE80F7       D      13       2   .text       
+     SWL_ON                                  FE8104       B      11       2   .text       
+     SWL_OFF                                 FE810F       C      12       2   .text       
+- VARIABLES:
 
 *********************************************************************************************
 MODULE STATISTIC
   Name                                      Data   Code  Const
 ---------------------------------------------------------------------------------------------
-  main.c.o                                     0      5      0
-  Start12.c.o                                  0     49      0
   mc9s12xdp512.c.o                           768      0      0
-  other                                      256     36      2
+  main.c.o                                     4     78      0
+  Start12.c.o                                  0     56      0
+  rtshc12.c.o (ansixbi.lib)                    0      5      0
+  clock.c.o                                    4    128      0
+  SW_LED.c.o                                   0     36      0
+  other                                      256     36      8
 
 *********************************************************************************************
 SECTION USE IN OBJECT-ALLOCATION SECTION
 ---------------------------------------------------------------------------------------------
 SECTION: ".text"
-  main 
+  main Init Clock_EnableOutput Clock_Set8MHZ Clock_Set20MHZ Clock_Set24MHZ 
+  Clock_Set40MHZ SWL_Init SWL_ON SWL_OFF 
+SECTION: ".data"
+  busSpeed 
 SECTION: ".init"
-  Init _Startup 
+  _Startup 
+SECTION: "NON_BANKED"
+  _LINC 
 SECTION: ".abs_section_8"
   _PORTE 
 SECTION: ".abs_section_9"
@@ -2672,6 +2707,8 @@ SECTION: ".abs_section_3ac"
   _XGR6 
 SECTION: ".abs_section_3ae"
   _XGR7 
+SECTION: ".common"
+  delay 
 
 *********************************************************************************************
 OBJECT LIST SORTED BY ADDRESS
@@ -2715,12 +2752,12 @@ OBJECT LIST SORTED BY ADDRESS
      _PPAGE                                      30       1       1       0   .abs_section_30
      _PORTK                                      32       1       1       0   .abs_section_32
      _DDRK                                       33       1       1       0   .abs_section_33
-     _SYNR                                       34       1       1       0   .abs_section_34
-     _REFDV                                      35       1       1       0   .abs_section_35
-     _CRGFLG                                     37       1       1       0   .abs_section_37
+     _SYNR                                       34       1       1       4   .abs_section_34
+     _REFDV                                      35       1       1       4   .abs_section_35
+     _CRGFLG                                     37       1       1       1   .abs_section_37
      _CRGINT                                     38       1       1       0   .abs_section_38
-     _CLKSEL                                     39       1       1       0   .abs_section_39
-     _PLLCTL                                     3A       1       1       0   .abs_section_3a
+     _CLKSEL                                     39       1       1       2   .abs_section_39
+     _PLLCTL                                     3A       1       1       1   .abs_section_3a
      _RTICTL                                     3B       1       1       0   .abs_section_3b
      _COPCTL                                     3C       1       1       0   .abs_section_3c
      _ARMCOP                                     3F       1       1       0   .abs_section_3f
@@ -2775,7 +2812,7 @@ OBJECT LIST SORTED BY ADDRESS
      _ATD1TEST1                                  89       1       1       0   .abs_section_89
      _ATD1STAT2                                  8A       1       1       0   .abs_section_8a
      _ATD1STAT1                                  8B       1       1       0   .abs_section_8b
-     _ATD1DIEN                                   8C       2       2       0   .abs_section_8c
+     _ATD1DIEN                                   8C       2       2       1   .abs_section_8c
      _ATD1PTAD                                   8E       2       2       0   .abs_section_8e
      _ATD1DR0                                    90       2       2       0   .abs_section_90
      _ATD1DR1                                    92       2       2       0   .abs_section_92
@@ -3181,8 +3218,8 @@ OBJECT LIST SORTED BY ADDRESS
      _DDR1AD0                                   273       1       1       0   .abs_section_273
      _RDR1AD0                                   275       1       1       0   .abs_section_275
      _PER1AD0                                   277       1       1       0   .abs_section_277
-     _PT01AD1                                   278       2       2       0   .abs_section_278
-     _DDR01AD1                                  27A       2       2       0   .abs_section_27a
+     _PT01AD1                                   278       2       2       5   .abs_section_278
+     _DDR01AD1                                  27A       2       2       1   .abs_section_27a
      _RDR01AD1                                  27C       2       2       0   .abs_section_27c
      _PER01AD1                                  27E       2       2       0   .abs_section_27e
      _CAN4CTL0                                  280       1       1       0   .abs_section_280
@@ -3324,26 +3361,69 @@ OBJECT LIST SORTED BY ADDRESS
      _XGR5                                      3AA       2       2       0   .abs_section_3aa
      _XGR6                                      3AC       2       2       0   .abs_section_3ac
      _XGR7                                      3AE       2       2       0   .abs_section_3ae
-     Init                                      C000      29      41       1   .init       
-     _Startup                                  C029       8       8       0   .init       
-     main                                      C053       5       5       1   .text       
+     busSpeed                                  2100       4       4       8   .data       
+     delay                                     2104       4       4       8   .common     
+     _Startup                                  C000       F      15       0   .init       
+     _LINC                                     C031       5       5       1   NON_BANKED  
+     main                                    FE8000      4E      78       2   .text       
+     Init                                    FE804E      29      41       2   .text       
+     Clock_EnableOutput                      FE8077      37      55       2   .text       
+     Clock_Set8MHZ                           FE80AE      13      19       2   .text       
+     Clock_Set20MHZ                          FE80C1      12      18       2   .text       
+     Clock_Set24MHZ                          FE80D3      12      18       2   .text       
+     Clock_Set40MHZ                          FE80E5      12      18       2   .text       
+     SWL_Init                                FE80F7       D      13       2   .text       
+     SWL_ON                                  FE8104       B      11       2   .text       
+     SWL_OFF                                 FE810F       C      12       2   .text       
 
 *********************************************************************************************
 UNUSED-OBJECTS SECTION
 ---------------------------------------------------------------------------------------------
+NOT USED PROCEDURES
+rtshc12.c.o (ansixbi.lib):
+  _BSHL _BSHRS _BSHRU _BDIVMODU _BDIVMODS _ISHL _ISHRU _ISHRS _LSHL _LSHRU 
+  _LSHRS _LADD _LSUB _LAND _LOR _LXOR _LCMP _LCMP_P _LCMP_PP _LNEG _LCOM _LDEC 
+  _LMUL _LMULU16x32 _LMULS16x32 _lDivMod _LDIVU _NEG_P _LDIVS _LMODU _LMODS 
+  _ILSEXT _COPY _CASE_DIRECT _CASE_DIRECT_BYTE _CASE_CHECKED _CASE_CHECKED_BYTE 
+  _CASE_SEARCH _CASE_SEARCH_BYTE _CASE_SEARCH_8 _CASE_SEARCH_8_BYTE _FCALL 
+  _FPCMP _PADD _PSUB _PINC _PDEC 
+clock.c.o:
+  Clock_GetBusSpeed 
+SW_LED.c.o:
+  SWL_TOG SWL_Pushed 
+NOT USED VARIABLES
+rtshc12.c.o (ansixbi.lib):
+  _PowOfTwo_8 _PowOfTwo_16 _PowOfTwo_32 errno 
 
 *********************************************************************************************
 COPYDOWN SECTION
 ---------------------------------------------------------------------------------------------
-------- ROM-ADDRESS: 0xC058 ---- SIZE       2 ---
+------- ROM-ADDRESS: 0xC036 ---- SIZE       4 ---
+Filling bytes inserted
+ 00022101
+------- ROM-ADDRESS: 0xC03A ---- RAM-ADDRESS: 0x2101 ---- SIZE       2 ---
+Name of initialized Object : busSpeed:1
+ 7A12
+------- ROM-ADDRESS: 0xC03C ---- SIZE       2 ---
 Filling bytes inserted
  0000
 
 *********************************************************************************************
 OBJECT-DEPENDENCIES SECTION
 ---------------------------------------------------------------------------------------------
-Init                      USES _startupData 
 _Startup                  USES __SEG_END_SSTACK Init main 
+main                      USES SWL_Init Clock_EnableOutput SWL_ON SWL_OFF 
+                                delay _LINC 
+Init                      USES _startupData 
+Clock_EnableOutput        USES Clock_Set8MHZ Clock_Set20MHZ Clock_Set24MHZ 
+                                Clock_Set40MHZ _CLKSEL _PLLCTL _CRGFLG 
+Clock_Set8MHZ             USES _SYNR _REFDV busSpeed 
+Clock_Set20MHZ            USES _SYNR _REFDV busSpeed 
+Clock_Set24MHZ            USES _SYNR _REFDV busSpeed 
+Clock_Set40MHZ            USES _SYNR _REFDV busSpeed 
+SWL_Init                  USES _PT01AD1 _DDR01AD1 _ATD1DIEN 
+SWL_ON                    USES _PT01AD1 
+SWL_OFF                   USES _PT01AD1 
 
 *********************************************************************************************
 DEPENDENCY TREE
@@ -3351,7 +3431,25 @@ DEPENDENCY TREE
  main and _Startup Group
  | 
  +- main                
- |    
+ |  | 
+ |  +- SWL_Init            
+ |  |    
+ |  +- Clock_EnableOutput  
+ |  |  | 
+ |  |  +- Clock_Set8MHZ       
+ |  |  |    
+ |  |  +- Clock_Set20MHZ      
+ |  |  |    
+ |  |  +- Clock_Set24MHZ      
+ |  |  |    
+ |  |  +- Clock_Set40MHZ      
+ |  |       
+ |  +- SWL_ON              
+ |  |    
+ |  +- SWL_OFF             
+ |  |    
+ |  +- _LINC               
+ |       
  +- _Startup            
     | 
     +- Init                
@@ -3364,6 +3462,6 @@ STATISTIC SECTION
 
 ExeFile:
 --------
-Number of blocks to be downloaded: 5
-Total size of all blocks to be downloaded: 92
+Number of blocks to be downloaded: 6
+Total size of all blocks to be downloaded: 347
 

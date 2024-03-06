@@ -4,13 +4,16 @@
 
 unsigned long busSpeed = DEF_BUS_CLOCK;
 
-void Clock_EnableOutput(ClockOutDiv) {
-    PLLCTL |= 0b01100000;
+void Clock_EnableOutput(ClockOutDiv busSpeedType) {
+    if (busSpeedType == ClockOutDiv1)  Clock_Set8MHZ();
+    else if (busSpeedType == ClockOutDiv2)  Clock_Set20MHZ();
+    else if (busSpeedType == ClockOutDiv3)  Clock_Set24MHZ();
+    else if (busSpeedType == ClockOutDiv4)  Clock_Set40MHZ();
 
-    if (ClockOutDiv == ClockOutDiv1)  Clock_Set8MHZ();
-    else if (ClockOutDiv == ClockOutDiv2)  Clock_Set20MHZ();
-    else if (ClockOutDiv == ClockOutDiv3)  Clock_Set24MHZ();
-    else if (ClockOutDiv == ClockOutDiv4)  Clock_Set40MHZ();
+    CLKSEL_PSTP = 1;
+    PLLCTL = 0b11111111;
+    while (!CRGFLG_LOCK);
+    CLKSEL_PLLSEL = 1;
 }
 
 void Clock_Set8MHZ(void) {

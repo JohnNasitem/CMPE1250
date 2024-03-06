@@ -1,7 +1,7 @@
 /********************************************************************/
 // HC12 Program:  ICA06 - Clock Library
 // Processor:     MC9S12XDP512
-// Bus Speed:     8 MHz
+// Bus Speed:     40 MHz
 // Author:        John N. Nasitem
 // Details:       See how frequency changes with the change of bus speed frequency
 // Date:          Mar. 3/2024
@@ -34,6 +34,7 @@
 /********************************************************************/
 // Global Variables
 /********************************************************************/
+unsigned long delay; 
 
 /********************************************************************/
 // Constants
@@ -53,7 +54,8 @@ void main(void)
 /********************************************************************/
   // one-time initializations
 /********************************************************************/
-
+SWL_Init();
+Clock_EnableOutput(ClockOutDiv3);
 
 /********************************************************************/
   // main program loop
@@ -61,7 +63,20 @@ void main(void)
 
   for (;;)
   {
-    
+    //Turn on LED
+    SWL_ON(SWL_RED);
+    //Delay by 100ms (on bus rate of 8MHz)
+    /*
+    How I got 8512.
+    First Tested with 4000 and got a frequency of 10.640
+    I did (4000 * 10.640) / 5 = 8512
+    5 came from my target Hz
+    */
+    for (delay = 0; delay < 8512; delay++) { }
+    //Turn off LED
+    SWL_OFF(SWL_RED);
+    //Same delay as before
+    for (delay = 0; delay < 8512; delay++) { }
   }                   
 }
 

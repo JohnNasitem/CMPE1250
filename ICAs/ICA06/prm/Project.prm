@@ -88,14 +88,14 @@ PLACEMENT /* here all predefined and user segments are placed into the SEGMENTS 
       STRINGS,                /* string literals */
       VIRTUAL_TABLE_SEGMENT,  /* C++ virtual table segment */
     //.ostext,                /* eventually OSEK code  */
-      DEFAULT_ROM, NON_BANKED,             /* runtime routines which must not be banked */
+      NON_BANKED,             /* runtime routines which must not be banked */
       COPY                    /* copy down information: how to initialize variables */
                               /* in case you want to use ROM_4000 here as well, make sure
                                  that all files (incl. library files) are compiled with the
                                  option: -OnB=b */
                         INTO  ROM_C000/*, ROM_4000*/;
 
-      OTHER_ROM         INTO           PAGE_FE,          PAGE_FC, PAGE_FB, PAGE_FA, PAGE_F9, PAGE_F8, 
+      DEFAULT_ROM       INTO           PAGE_FE,          PAGE_FC, PAGE_FB, PAGE_FA, PAGE_F9, PAGE_F8, 
                               PAGE_F7, PAGE_F6, PAGE_F5, PAGE_F4, PAGE_F3, PAGE_F2, PAGE_F1, PAGE_F0, 
                               PAGE_EF, PAGE_EE, PAGE_ED, PAGE_EC, PAGE_EB, PAGE_EA, PAGE_E9, PAGE_E8, 
                               PAGE_E7, PAGE_E6, PAGE_E5, PAGE_E4, PAGE_E3, PAGE_E2, PAGE_E1, PAGE_E0;
