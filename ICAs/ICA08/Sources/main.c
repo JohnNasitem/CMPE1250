@@ -19,8 +19,8 @@
 #include "clock.h"
 
 //Other system includes or your includes go here
-#include <stdlib.h>
-#include <stdio.h>
+//#include <stdlib.h>
+//#include <stdio.h>
 
 
 /********************************************************************/
