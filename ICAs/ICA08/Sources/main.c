@@ -17,6 +17,9 @@
 #include "derivative.h" /* derivative-specific definitions */
 #include "SW_LED.h"
 #include "clock.h"
+#include "sci.h"
+#include "rti.h"
+#include <ctype.h>
 
 //Other system includes or your includes go here
 //#include <stdlib.h>
@@ -30,11 +33,15 @@
 /********************************************************************/
 // Local Prototypes
 /********************************************************************/
+//Checks if the given char is a vowel
+//Returns 1 if true, 0 if false
+unsigned char IsVowel(unsigned char potentialVowel);
 
 /********************************************************************/
 // Global Variables
 /********************************************************************/
-//char data;
+char alphabet[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";                       //String of the alphabet
+char pData;                                                           //Data being received by the SCI;
 
 /********************************************************************/
 // Constants
@@ -56,15 +63,7 @@ void main(void)
 /********************************************************************/
 SWL_Init();
 Clock_Set20MHZ();
-
-//Setting Baud rate
-//Board rate = 20E6 / (16 * 9600)
-SCI0BD = 130;
-
-//Enable recieving
-SCI0CR2_RE = 1;
-//Enable transmitting
-SCI0CR2_TE = 1;
+sci0_Init(9600, 0);
 
 /********************************************************************/
   // main program loop
@@ -72,28 +71,43 @@ SCI0CR2_TE = 1;
 
   for (;;)
   {
-    //Check if register is ready to recieve data
-    if(SCI0SR1_TDRE) //Check if transmit data register is empty
-    {
-      SCI0DRL = 'A';
-    }
+    //Blocking delay of 50 ms
+    RTI_Delay_ms(50);
+    //Toggle Red LED
+    SWL_TOG(SWL_RED);
+    //Send a random letter
+    sci0_txByte(alphabet[GetRandom(0, 26)]);
 
-    /* if(SCI0SR1 & SCI0SR1_RDRF_MASK) //Check if a character has been received
-    {
-      data = SCI0DRL;
-
-      if (data = 'f') {
-        SWL_ON(SWL_RED);
-        SCI0DRL = 0;
+    if (sci0_rxByte(&pData)) {
+      if (IsVowel(pData)) {
+        SWL_ON(SWL_GREEN);
+        SWL_OFF(SWL_YELLOW);
       }
-      else SWL_OFF(SWL_RED);
-    } */
+      else {
+        SWL_OFF(SWL_GREEN);
+        SWL_ON(SWL_YELLOW);
+      }
+    }
+    else {
+      //Should turn off if a key isnt being held, potentially not needed
+      SWL_OFF(SWL_GREEN);
+      SWL_OFF(SWL_YELLOW);
+    }
   }                   
 }
 
 /********************************************************************/
 // Functions
 /********************************************************************/
+unsigned char IsVowel(unsigned char potentialVowel) {
+  potentialVowel = toLower(potentialVowel);           //potentially not needed?
+
+  if (potentialVowel == 'a' || potentialVowel == 'e' || potentialVowel == 'i' || potentialVowel == 'o' || potentialVowel == 'u' || potentialVowel == 'y') {     //Should y be a vowel?
+    return 1;
+  }
+
+  return 0;
+}
 
 /********************************************************************/
 // Interrupt Service Routines
