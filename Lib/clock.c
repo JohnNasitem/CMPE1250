@@ -25,7 +25,7 @@ void Clock_Set8MHZ(void) {
 void Clock_Set20MHZ(void) {
     SYNR = 4;
     REFDV = 7;
-    busSpeed = 20000;
+    busSpeed = 20000000;
 
     CLKSEL_PSTP = 1;
     PLLCTL = 0b11111111;
@@ -36,13 +36,13 @@ void Clock_Set20MHZ(void) {
 void Clock_Set24MHZ(void) {
     SYNR = 2;
     REFDV = 3;
-    busSpeed = 24000;
+    busSpeed = 24000000;
 }
 
 void Clock_Set40MHZ(void) {
     SYNR = 4;
     REFDV = 3;
-    busSpeed = 40000;
+    busSpeed = 40000000;
 }
 
 unsigned long Clock_GetBusSpeed(void) {
