@@ -8,7 +8,7 @@ unsigned long sci0_Init(unsigned long ulBaudRate, int iRDRF_Interrupt)
 { // What does iRDRF_Interrupt do?
     // Setting Baud rate
     // Board rate = 20E6 / (16 * 9600)
-    SCI0BD = (unsigned long)(Clock_GetBusSpeed() / (16 * ulBaudRate));
+    SCI0BD = (unsigned int)(Clock_GetBusSpeed() / (16 * ulBaudRate));
 
     // Enable recieving
     SCI0CR2_RE = 1;
@@ -21,22 +21,23 @@ unsigned long sci0_Init(unsigned long ulBaudRate, int iRDRF_Interrupt)
     return SCI0BD;
 }
 
+// Blocking receiving
 unsigned char sci0_bread(void)
 {
     // Wait till a character is received
-    while (!(SCI0SR1 & SCI0SR1_RDRF_MASK))
-        ;
+    while (!(SCI0SR1 & SCI0SR1_RDRF_MASK));
 
     // Returns byte
-    return = SCI0DRL;
+    return SCI0DRL;
 }
 
+// Non-blocking receiving
 unsigned char sci0_rxByte(unsigned char * pData)
 {
-    // Non-blocking receiving
-    if (SCI0SR1 & SCI0SR1_RDRF_MASK) // Check if a character has been received
+    // Check if a character has been received
+    if (SCI0SR1 & SCI0SR1_RDRF_MASK)
     {
-        pData = SCI0DRL;
+        *pData = SCI0DRL;
         return 1;
     }
     else {
@@ -44,14 +45,14 @@ unsigned char sci0_rxByte(unsigned char * pData)
     }
 }
 
+//send btye blocking
 void sci0_txByte(unsigned char data)
 {
-    // Check if transmit data register is empty
-    if (SCI0SR1 & SCI0SR1_TDRE_MASK)
-    {
-        // Send data
-        SCI0DRL = data;
-    }
+    // wait for transmit data register to be empty
+    while (!(SCI0SR1 & SCI0SR1_TDRE_MASK));
+    
+    // Send data
+    SCI0DRL = data;
 }
 
 void sci0_txStr (char const * straddr) {

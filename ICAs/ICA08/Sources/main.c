@@ -22,8 +22,8 @@
 #include <ctype.h>
 
 //Other system includes or your includes go here
-//#include <stdlib.h>
-//#include <stdio.h>
+#include <stdlib.h>
+#include <stdio.h>
 
 
 /********************************************************************/
@@ -42,6 +42,7 @@ unsigned char IsVowel(unsigned char potentialVowel);
 /********************************************************************/
 char alphabet[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";                       //String of the alphabet
 char pData;                                                           //Data being received by the SCI;
+unsigned int buadRate;
 
 /********************************************************************/
 // Constants
@@ -63,7 +64,7 @@ void main(void)
 /********************************************************************/
 SWL_Init();
 Clock_Set20MHZ();
-sci0_Init(9600, 0);
+buadRate = sci0_Init(9600, 0);
 
 /********************************************************************/
   // main program loop
@@ -76,7 +77,8 @@ sci0_Init(9600, 0);
     //Toggle Red LED
     SWL_TOG(SWL_RED);
     //Send a random letter
-    sci0_txByte(alphabet[GetRandom(0, 26)]);
+    //sci0_txByte(alphabet[rand() % 26]);
+
 
     if (sci0_rxByte(&pData)) {
       if (IsVowel(pData)) {
@@ -100,7 +102,9 @@ sci0_Init(9600, 0);
 // Functions
 /********************************************************************/
 unsigned char IsVowel(unsigned char potentialVowel) {
-  potentialVowel = toLower(potentialVowel);           //potentially not needed?
+  //potentialVowel = tolower((char)potentialVowel);           //potentially not needed?
+  potentialVowel = 97;
+  sci0_txByte(potentialVowel);
 
   if (potentialVowel == 'a' || potentialVowel == 'e' || potentialVowel == 'i' || potentialVowel == 'o' || potentialVowel == 'u' || potentialVowel == 'y') {     //Should y be a vowel?
     return 1;
