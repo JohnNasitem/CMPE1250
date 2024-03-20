@@ -65,6 +65,7 @@ void main(void)
 SWL_Init();
 Clock_Set20MHZ();
 buadRate = sci0_Init(9600, 0);
+RTI_Init();
 
 /********************************************************************/
   // main program loop
@@ -77,7 +78,7 @@ buadRate = sci0_Init(9600, 0);
     //Toggle Red LED
     SWL_TOG(SWL_RED);
     //Send a random letter
-    //sci0_txByte(alphabet[rand() % 26]);
+    //sci0_txByte(rand() % 26 + 'A');
 
 
     if (sci0_rxByte(&pData)) {
@@ -95,7 +96,7 @@ buadRate = sci0_Init(9600, 0);
       SWL_OFF(SWL_GREEN);
       SWL_OFF(SWL_YELLOW);
     }
-  }                   
+  }
 }
 
 /********************************************************************/
