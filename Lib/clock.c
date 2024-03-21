@@ -26,11 +26,6 @@ void Clock_Set20MHZ(void) {
     SYNR = 4;
     REFDV = 7;
     busSpeed = 20000000;
-
-    CLKSEL_PSTP = 1;
-    PLLCTL = 0b11111111;
-    while (!CRGFLG_LOCK);
-    CLKSEL_PLLSEL = 1;
 }
 
 void Clock_Set24MHZ(void) {
