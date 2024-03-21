@@ -63,4 +63,8 @@ void sci0_txStr (char const * straddr) {
         //Transmit the char to the SCI
         sci0_txByte(straddr[stringIndex]);
     }
+
+    //Example from pdf -- not allowed to use this form
+    /* for (; *straddr; ++straddr)
+        sci0_txByte(straddr); */
 }
