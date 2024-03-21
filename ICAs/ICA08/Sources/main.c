@@ -63,7 +63,7 @@ void main(void)
   // one-time initializations
 /********************************************************************/
 SWL_Init();
-Clock_Set20MHZ();
+Clock_EnableOutput(ClockOutDiv2);
 buadRate = sci0_Init(9600, 0);
 RTI_Init();
 
