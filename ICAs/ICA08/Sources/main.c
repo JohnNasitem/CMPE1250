@@ -78,21 +78,23 @@ RTI_Init();
     //Toggle Red LED
     SWL_TOG(SWL_RED);
     //Send a random letter
-    //sci0_txByte(rand() % 26 + 'A');
+    sci0_txByte(rand() % 26 + 'A');
 
-
+    //Check if a input has been recieved
     if (sci0_rxByte(&pData)) {
+      //If its a vowel then turn on green and turn of yellow
       if (IsVowel(pData)) {
         SWL_ON(SWL_GREEN);
         SWL_OFF(SWL_YELLOW);
       }
+      //If its a vowel then turn off green and turn on yellow
       else {
         SWL_OFF(SWL_GREEN);
         SWL_ON(SWL_YELLOW);
       }
     }
     else {
-      //Should turn off if a key isnt being held, potentially not needed
+      //Should turn off if a key isnt being held
       SWL_OFF(SWL_GREEN);
       SWL_OFF(SWL_YELLOW);
     }
@@ -103,11 +105,10 @@ RTI_Init();
 // Functions
 /********************************************************************/
 unsigned char IsVowel(unsigned char potentialVowel) {
-  //potentialVowel = tolower((char)potentialVowel);           //potentially not needed?
-  potentialVowel = 97;
-  sci0_txByte(potentialVowel);
+  //Uppercase input
+  potentialVowel = toupper((char)potentialVowel);
 
-  if (potentialVowel == 'a' || potentialVowel == 'e' || potentialVowel == 'i' || potentialVowel == 'o' || potentialVowel == 'u' || potentialVowel == 'y') {     //Should y be a vowel?
+  if (potentialVowel == 'A' || potentialVowel == 'E' || potentialVowel == 'I' || potentialVowel == 'O' || potentialVowel == 'U' || potentialVowel == 'Y') {     //Should y be a vowel?
     return 1;
   }
 
