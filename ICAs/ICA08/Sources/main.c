@@ -40,9 +40,7 @@ unsigned char IsVowel(unsigned char potentialVowel);
 /********************************************************************/
 // Global Variables
 /********************************************************************/
-char alphabet[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";                       //String of the alphabet
 char pData;                                                           //Data being received by the SCI;
-unsigned int buadRate;
 
 /********************************************************************/
 // Constants
@@ -64,7 +62,7 @@ void main(void)
 /********************************************************************/
 SWL_Init();
 Clock_EnableOutput(ClockOutDiv2);
-buadRate = sci0_Init(9600, 0);
+sci0_Init(9600, 0);
 RTI_Init();
 
 /********************************************************************/
