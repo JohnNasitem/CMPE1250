@@ -2,6 +2,8 @@
 #include "derivative.h" /* derivative-specific definitions */
 #include "clock.h"
 
+#define DEF_BUS_CLOCK 8000000   //default clock speed
+
 unsigned long busSpeed = DEF_BUS_CLOCK;
 
 void Clock_EnableOutput(ClockOutDiv busSpeedType) {
@@ -24,19 +26,19 @@ void Clock_Set8MHZ(void) {
 
 void Clock_Set20MHZ(void) {
     SYNR = 4;
-    REFDV = 7;
+    REFDV = 3;
     busSpeed = 20000000;
 }
 
 void Clock_Set24MHZ(void) {
-    SYNR = 2;
-    REFDV = 3;
+    SYNR = 1;
+    REFDV = 2;
     busSpeed = 24000000;
 }
 
 void Clock_Set40MHZ(void) {
     SYNR = 4;
-    REFDV = 3;
+    REFDV = 1;
     busSpeed = 40000000;
 }
 
