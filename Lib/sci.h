@@ -69,6 +69,7 @@ void sci0_txByte (unsigned char data);
 // send a null-terminated string over SCI
 void sci0_txStr (char const * straddr);
 
+void sci0_Init2(void);
 /* BASIC FUNCTIONS END*******************************************************/
 
 

@@ -8,14 +8,17 @@ unsigned long sci0_Init(unsigned long ulBaudRate, int iRDRF_Interrupt)
 { // What does iRDRF_Interrupt do?
     // Setting Baud rate
     // Board rate = 20E6 / (16 * 9600)
-    SCI0BD = (unsigned int)(Clock_GetBusSpeed() / (16 * ulBaudRate));
+    /* SCI0BD = (unsigned int)(Clock_GetBusSpeed() / (16 * ulBaudRate));
 
     // Enable recieving
     SCI0CR2_RE = 1;
     // Enable transmitting
     SCI0CR2_TE = 1;
     // Sets if RDRF or OR to generate interupt requests, 0 = disabled, 1 = enabled
-    SCI0CR2_RIE = iRDRF_Interrupt;
+    SCI0CR2_RIE = iRDRF_Interrupt; */
+
+    SCI0BD = 130;
+    SCI0CR2 = 0b00001100;
 
     // Returning the actual baud
     return SCI0BD;
