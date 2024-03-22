@@ -19,11 +19,11 @@
 #include "clock.h"
 #include "sci.h"
 #include "rti.h"
-#include <string.h> 
 
 //Other system includes or your includes go here
 #include <stdlib.h>
 #include <stdio.h>
+
 
 
 /********************************************************************/
@@ -37,7 +37,14 @@
 /********************************************************************/
 // Global Variables
 /********************************************************************/
-char[] vowels = ["AEIOUY"]
+char vowels[] = "AEIOUY";
+int vowelSum[];
+unsigned int counter = 0;
+unsigned char currentVowel;
+char randomString[26] = "";         //addition 2 char to allow for the \0 to terminate the string
+unsigned int sumVowels = 0;
+unsigned int totalStringsTransmitted = 0;
+unsigned char letter;
 
 /********************************************************************/
 // Constants
@@ -61,11 +68,6 @@ SWL_Init();
 Clock_EnableOutput(ClockOutDiv2);
 sci0_Init(19200, 0);
 RTI_Init();
-unsigned int counter = 0;
-unsigned char currentVowel;
-char[] randomString;
-unsigned int sumVowels = 0;
-unsigned int totalStringsTransmitted = 0;
 
 /********************************************************************/
   // main program loop
@@ -77,14 +79,16 @@ unsigned int totalStringsTransmitted = 0;
     SWL_ON(SWL_RED);
     totalStringsTransmitted++;
     counter = 0;
+    sumVowels = 0;
 
     //Iterate 20 times
     while (counter < 20) {
       //Gets a random vowel
-      currentVowel = vowels[GetRandom(0, strlen(vowels))];
+      letter = GetRandom(0, strlen(vowels));
+      currentVowel = vowels[letter];
 
       //Uppercase the vowel if center button is pressed and lowercase if not
-      if (SWL_Pushed(SWL_CTR)) currentVowel = touppper(currentVowel); //check if toupper works like that
+      if (SWL_Pushed(SWL_CTR)) currentVowel = toupper(currentVowel); //check if toupper works like that
       else currentVowel = tolower(currentVowel);
 
       randomString[counter] = currentVowel;
@@ -94,12 +98,14 @@ unsigned int totalStringsTransmitted = 0;
       counter++;
     }
 
+    SplitNumber(sumVowels);
+
     //Part B: adds the sum of the vowels after the vowels with a space before and after
-    randomString[counter] " %04d ", sumVowels;
+    randomString[counter] = (sumVowels);
 
     //Display on the screen
     sci0_txStr(&randomString);
-
+    sci0_txStr(&vowelSum);
 
     SWL_OFF(SWL_RED);
 
@@ -111,6 +117,17 @@ unsigned int totalStringsTransmitted = 0;
 /********************************************************************/
 // Functions
 /********************************************************************/
+int[] SplitNumber(unsigned number) {
+  int[] digits = [];
+  int counter;
+
+  for (counter = 0; counter < strlen(number), counter++) {
+    digits[counter] = number % 10;
+    number = (unsigned int)number / 10;
+  }
+
+  return digits;
+}
 
 /********************************************************************/
 // Interrupt Service Routines

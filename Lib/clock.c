@@ -2,8 +2,6 @@
 #include "derivative.h" /* derivative-specific definitions */
 #include "clock.h"
 
-#define DEF_BUS_CLOCK 8000000   //default clock speed
-
 unsigned long busSpeed = DEF_BUS_CLOCK;
 
 void Clock_EnableOutput(ClockOutDiv busSpeedType) {
