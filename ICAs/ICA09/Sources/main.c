@@ -38,13 +38,13 @@
 // Global Variables
 /********************************************************************/
 char vowels[] = "AEIOUY";
-int vowelSum[];
 unsigned int counter = 0;
 unsigned char currentVowel;
-char randomString[26] = "";         //addition 2 char to allow for the \0 to terminate the string
+char randomString[22] = "";         //addition 2 char to allow for the \0 to terminate the string
 unsigned int sumVowels = 0;
 unsigned int totalStringsTransmitted = 0;
 unsigned char letter;
+char buffer[10] = "";
 
 /********************************************************************/
 // Constants
@@ -72,6 +72,12 @@ RTI_Init();
 /********************************************************************/
   // main program loop
 /********************************************************************/
+  //Part C:
+  //Start at 0,0
+  sci0_txStr("\x1b[0;0H");
+
+  sci0_txStr("John Nasitem");
+
 
   for (;;)
   {
@@ -91,21 +97,39 @@ RTI_Init();
       if (SWL_Pushed(SWL_CTR)) currentVowel = toupper(currentVowel); //check if toupper works like that
       else currentVowel = tolower(currentVowel);
 
+      //Adds the random vowel to the char array
       randomString[counter] = currentVowel;
 
-      sumVowels += currentVowel; //Check to make sure this adds the vowels instead of concatinate
+      //Gets the sum of the vowels
+      sumVowels += currentVowel;
 
       counter++;
     }
 
-    SplitNumber(sumVowels);
+    //Set it to line 3
+    sci0_txStr("\x1b[3;0H");
+    //Change vowels colour to green
+    sci0_txStr("\x1b[32m");
+    //Display on the screen
+    sci0_txStr(randomString);
 
     //Part B: adds the sum of the vowels after the vowels with a space before and after
-    randomString[counter] = (sumVowels);
+    sprintf(buffer, "%04d", sumVowels);
+    sci0_txByte(' ');
 
-    //Display on the screen
-    sci0_txStr(&randomString);
-    sci0_txStr(&vowelSum);
+    //Change vowels colour to green
+    sci0_txStr("\x1b[33m");
+
+    sci0_txStr(buffer);
+    sci0_txByte(' ');
+
+    //Set it to line 3
+    sci0_txStr("\x1b[5;0H");
+    sprintf(buffer, "%d", totalStringsTransmitted);
+    //Change vowels colour to default
+    sci0_txStr("\x1b[39m");
+    //Sends to 
+    sci0_txStr(buffer);
 
     SWL_OFF(SWL_RED);
 
@@ -117,17 +141,6 @@ RTI_Init();
 /********************************************************************/
 // Functions
 /********************************************************************/
-int[] SplitNumber(unsigned number) {
-  int[] digits = [];
-  int counter;
-
-  for (counter = 0; counter < strlen(number), counter++) {
-    digits[counter] = number % 10;
-    number = (unsigned int)number / 10;
-  }
-
-  return digits;
-}
 
 /********************************************************************/
 // Interrupt Service Routines
