@@ -19,6 +19,7 @@
 #include "clock.h"
 #include "sci.h"
 #include "rti.h"
+#include "misc.h"
 
 //Other system includes or your includes go here
 #include <stdlib.h>
