@@ -3,6 +3,7 @@
 #include "sci.h"
 #include "clock.h"
 #include <string.h> 
+#include <stdio.h>
 
 unsigned long sci0_Init(unsigned long ulBaudRate, int iRDRF_Interrupt)
 { // What does iRDRF_Interrupt do?
