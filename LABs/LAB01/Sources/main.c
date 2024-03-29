@@ -1,21 +1,82 @@
+/********************************************************************/
+// HC12 Program:  LAB01
+// Processor:     MC9S12XDP512
+// Bus Speed:     40 MHz
+// Author:        John N. Nasitem
+// Details:       Simple binary calculator              
+// Date:          Date Created
+// Revision History :
+//  each revision will have a date + desc. of changes
+
+
+
+/********************************************************************/
+// Library includes
+/********************************************************************/
 #include <hidef.h>      /* common defines and macros */
-#include "derivative.h"      /* derivative-specific definitions */
+#include "derivative.h" /* derivative-specific definitions */
+#include "SW_LED.h"
+#include "clock.h"
+#include "sci.h"
+#include "rti.h"
+#include "misc.h"
+
+//Other system includes or your includes go here
+#include <stdlib.h>
+#include <stdio.h>
 
 
 
+/********************************************************************/
+//Defines
+/********************************************************************/
 
+/********************************************************************/
+// Local Prototypes
+/********************************************************************/
 
+/********************************************************************/
+// Global Variables
+/********************************************************************/
 
-void main(void) {
-  /* put your own code here */
+/********************************************************************/
+// Constants
+/********************************************************************/
+
+/********************************************************************/
+// Main Entry
+/********************************************************************/
+void main(void)
+{
+  //Any main local variables must be declared here
+
+  // main entry point
+  _DISABLE_COP();
+  //EnableInterrupts;
   
+/********************************************************************/
+  // one-time initializations
+/********************************************************************/
+SWL_Init();
+Clock_EnableOutput(ClockOutDiv2);
+sci0_Init(9600, 0);
+RTI_Init();
 
+/********************************************************************/
+  // main program loop
+/********************************************************************/
 
-	EnableInterrupts;
-
-
-  for(;;) {
-    _FEED_COP(); /* feeds the dog */
-  } /* loop forever */
-  /* please make sure that you never leave main */
+  for (;;)
+  {
+    RTI_Delay_ms(500);
+    sci0_txStrXY(0, 0, "Hello");
+  }                   
 }
+
+/********************************************************************/
+// Functions
+/********************************************************************/
+
+/********************************************************************/
+// Interrupt Service Routines
+/********************************************************************/

@@ -9,25 +9,25 @@ int GetRandom (int iLow, int iHighEx) {
     return (rand() % (iHighEx - iLow)) + iLow;
 }
 
-/* void SendString (char const * stringAdress, ColorEscapeValues forecolor, ColorEscapeValues backcolor, int xPos, int yPos) {
+void SendString (char const * stringAdress, ColorEscapeValues forecolor, ColorEscapeValues backcolor, int row, int column) {
     char buffer[1024];
     
     //Set locaton
-    if (!(xPos == -1 && yPos == -1)) {
-        snprintf(buffer, sizeof(buffer), "\x1b[%d;%dH", xPos, yPos);
+    if (!(row == -1 && column == -1)) {
+        sprintf(buffer, "\x1b[%d;%dH", row, column);
         sci0_txStr(buffer);
     }
 
     //sets the foreground clour
     if (forecolor != CEV_Default) {
-        snprintf(buffer, sizeof(buffer), "\x1b[%dm", forecolor);
+        sprintf(buffer, "\x1b[%dm", forecolor);
         sci0_txStr(buffer);
     }
 
     if (backcolor != CEV_Default) {
-        snprintf(buffer, sizeof(buffer), "\x1b[%dm", forecolor + 10);
+        sprintf(buffer, "\x1b[%dm", backcolor + 10);
         sci0_txStr(buffer);
     }
 
     sci0_txStr(stringAdress);
-} */
+}

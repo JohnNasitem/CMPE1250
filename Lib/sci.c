@@ -68,3 +68,27 @@ void sci0_txStr (char const * straddr) {
     /* for (; *straddr; ++straddr)
         sci0_txByte(straddr); */
 }
+
+int sci0_Peek (void) {
+    if (SCI0SR1 & SCI0SR1_RDRF_MASK) return 1;
+    return 0;
+}
+
+void sci0_GotoXY (int iRow, int iCol) {             //Doesnt work and idk why
+    char buffer2[20] = "";
+    sprintf(buffer2, "\x1b[%d;%dH", iRow, iCol);
+    sci0_txStr(buffer2);
+}
+
+void sci0_txStrXY (int iCol, int iRow, char const * straddr) {
+    sci0_GotoXY(iCol, iRow);
+    sci0_txStr(straddr);
+}
+
+void sci0_ClearScreen (void) {
+    sci0_txStr("\x1b[2J");
+}
+
+void sci0_ShowBin16 (unsigned int iVal) {
+
+}
