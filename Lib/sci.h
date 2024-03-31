@@ -96,7 +96,7 @@ int sci0_Peek (void);
 
 // use an escape sequence to place the cursor at the specified position
 // this is the \x1B[y;xH form with formatted argument replacement (sprintf)
-void sci0_GotoXY (int iRow, int iCol);
+void sci0_GotoXY (int iCol, int iRow);
 
 // use sci0_GotoXY and sci0_txStr to place the string
 void sci0_txStrXY (int iCol, int iRow, char const * straddr);

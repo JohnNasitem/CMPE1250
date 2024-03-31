@@ -3,6 +3,8 @@
 #include "misc.h"
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
+#include <math.h>
 
 int GetRandom (int iLow, int iHighEx) {
     //Returns a random value inclusively between iLow and iHighEx - 1
@@ -31,3 +33,29 @@ void SendString (char const * stringAdress, ColorEscapeValues forecolor, ColorEs
 
     sci0_txStr(stringAdress);
 }
+
+int ToDigitVal (char digit) {
+    if (digit >= 0 + 48 && digit <= 9 + 48) {
+        return (unsigned int)(digit - 48);
+    }
+
+    if (digit >= 'A' && digit <= 'F') {
+        return (unsigned int)((digit - 'A') + 10);
+    }
+
+    return 0;
+}
+
+unsigned int HexArrayToUInt16 (char * pArray) {
+    int counter = strlen(pArray) - 1;
+    unsigned int decVal = 0;
+
+    while (counter >= 0) {
+        decVal += ToDigitVal(pArray[counter]) * pow(16, strlen(pArray) - 1 - counter);
+        counter--;
+    }
+
+    return decVal;
+}
+
+
