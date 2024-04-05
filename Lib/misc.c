@@ -6,11 +6,13 @@
 #include <string.h>
 #include <math.h>
 
+//Gets a random number between low, including low and high but not including high
 int GetRandom (int iLow, int iHighEx) {
     //Returns a random value inclusively between iLow and iHighEx - 1
     return (rand() % (iHighEx - iLow)) + iLow;
 }
 
+//Send string with location and colour to tera term
 void SendString (char const * stringAdress, ColorEscapeValues forecolor, ColorEscapeValues backcolor, int row, int column) {
     char buffer[1024];
     
@@ -34,6 +36,7 @@ void SendString (char const * stringAdress, ColorEscapeValues forecolor, ColorEs
     sci0_txStr(stringAdress);
 }
 
+//Convert hexadecimal digit to decimal
 int ToDigitVal (char digit) {
     if (digit >= 0 + 48 && digit <= 9 + 48) {
         return (unsigned int)(digit - 48);
@@ -46,6 +49,7 @@ int ToDigitVal (char digit) {
     return 0;
 }
 
+//Convert array of hex to decimal
 unsigned int HexArrayToUInt16 (char * pArray) {
     int counter = strlen(pArray) - 1;
     unsigned int decVal = 0;
