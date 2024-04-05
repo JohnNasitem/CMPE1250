@@ -2,11 +2,86 @@
 #include "derivative.h" /* derivative-specific definitions */
 #include "segs.h"
 
-void Segs_Init (void) (
+/********************************************************************/
+// Local Helpers
+/********************************************************************/
+//Pull Down strobe
+#define Segs_WLATCH PORTA &= (~0x01); PORTA |= 0x01;
+
+#define Segs_ML PORTA &= (~0x02);
+#define Segs_MH PORTA |= 0x02;
+
+void Segs_Init (void) {
     // ensure port pins are high
     PORTA |= 0x03;
 
     // set port pins as outputs
     DDRA |= 0x03;
-    DDRB = 0xFF;
-)
+    DDRB = 0xff;
+}
+
+// normal decode, 8-bit value, to address, w or w/o decimal point
+void Segs_Normal (unsigned char Addr, unsigned char Value, Segs_DPOption dp) {
+    // trim address to range
+    Addr &= 0x07;
+
+    //Bank A, Normal Op, Decode, Hex, No Data Coming
+    Addr |= 0b01011000;
+
+    //Check if show decimal point
+    if (dp)
+        Value &= (~0x80);
+    else
+        Value |= 0x80;
+
+    //set the location
+    PORTB = Addr;
+    //Present command with mode high
+    Segs_MH
+
+    //latch command
+    Segs_WLATCH
+
+    //set data
+    PORTB = Value;
+    //Present command with mode low
+    Segs_ML
+
+    //latch data / update
+    Segs_WLATCH
+}
+
+void Segs_Custom (unsigned char Addr, unsigned char Value) {
+    // trim address to range
+    Addr &= 0x07;
+
+    //Bank A, Normal Op, No Decode, Hex, No Data Coming
+    Addr |= 0b01111000;
+
+    //Remove decimal point
+    Value |= 0x80;
+
+    //set the location
+    PORTB = Addr;
+    //Present command with mode high
+    Segs_MH
+
+    //latch command
+    Segs_WLATCH
+
+    //set data
+    PORTB = Value;
+    //Present command with mode low
+    Segs_ML
+
+    //latch data / update
+    Segs_WLATCH
+}
+
+void Segs_Clear(void) {
+    int incr;
+
+    for(incr = 0; incr < 8; incr++) {
+        Segs_Custom(incr, 0b00000000);
+    }
+}

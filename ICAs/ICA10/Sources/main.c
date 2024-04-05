@@ -1,9 +1,9 @@
 /********************************************************************/
-// HC12 Program:  Ica 09
+// HC12 Program:  Ica 10
 // Processor:     MC9S12XDP512
 // Bus Speed:     40 MHz
 // Author:        John N. Nasitem
-// Details:       send in a random string of vowels 20 chars long with the sum of hte vowels and run count              
+// Details:                     
 // Date:          Date Created
 // Revision History :
 //  each revision will have a date + desc. of changes
@@ -17,9 +17,9 @@
 #include "derivative.h" /* derivative-specific definitions */
 #include "SW_LED.h"
 #include "clock.h"
-#include "sci.h"
 #include "rti.h"
 #include "misc.h"
+#include "segs.h"
 
 //Other system includes or your includes go here
 #include <stdlib.h>
@@ -49,7 +49,7 @@
 void main(void)
 {
   //Any main local variables must be declared here
-
+  int counter = 0;
   // main entry point
   _DISABLE_COP();
   //EnableInterrupts;
@@ -59,8 +59,8 @@ void main(void)
 /********************************************************************/
 SWL_Init();
 Clock_EnableOutput(ClockOutDiv2);
-sci0_Init(19200, 0);
 RTI_Init();
+Segs_Init();
 
 /********************************************************************/
   // main program loop
@@ -68,7 +68,10 @@ RTI_Init();
 
   for (;;)
   {
-    
+    RTI_Delay_ms(100);
+    Segs_Clear();
+    Segs_Normal(3, counter++, Segs_DP_OFF);
+    if (counter == 16) counter = 0;
   }                   
 }
 
