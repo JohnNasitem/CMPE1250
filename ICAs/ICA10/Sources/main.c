@@ -85,7 +85,7 @@ void main(void)
 /********************************************************************/
 // Functions
 /********************************************************************/
-void Tier1()
+void Tier1()          //make functions have an external counter so its not reset each call or add a inf loop
 {
   int counter = 0x0;
 
@@ -97,6 +97,26 @@ void Tier1()
     Segs_16H(counter, Segs_LineTop);
     Segs_16H(0xFFFF - counter++, Segs_LineBottom);
   }
+}
+
+void Tier2() {
+  int counter = 0;
+  int index = 0;
+  unsigned char AnimationFrames[] = {
+    0b11000000,
+    0b10100000,
+    0b10010000,
+    0b10000001,
+    0b10001000,
+    0b10000010,
+  }
+  RTI_Delay_ms(100);
+
+  Segs_Custom(index, AnimationFrames[counter++])
+
+  //add movement every 10 passes
+
+  if (counter == 5) counter = 0;
 }
 /********************************************************************/
 // Interrupt Service Routines
