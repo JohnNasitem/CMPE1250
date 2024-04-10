@@ -58,11 +58,9 @@ void Segs_Custom (unsigned char Addr, unsigned char Value) {
     //Bank A, Normal Op, No Decode, Hex, No Data Coming
     Addr |= 0b01111000;
 
-    //Remove decimal point
-    Value |= 0x80;
-
     //set the location
     PORTB = Addr;
+    
     //Present command with mode high
     Segs_MH
 
@@ -83,5 +81,28 @@ void Segs_Clear(void) {
 
     for(incr = 0; incr < 8; incr++) {
         Segs_Custom(incr, 0b00000000);
+    }
+}
+
+void Segs_8H (unsigned char addr, unsigned char value) {
+    //Sanitizing address
+    addr %= 8;
+
+    //Bit shift by 4 to isolate the first digit
+    Segs_Normal(addr, value >> 4, Segs_DP_OFF);
+    //Send second digit with sanitized address
+    Segs_Normal((addr + 1) % 8, value % 0x10, Segs_DP_OFF);
+}
+
+void Segs_16H (unsigned int value, Segs_LineOption line) {
+    int startAddr = 4 * line;
+    int incr;
+
+    //Iterate through each nibble
+    for (incr = 0; incr < 4; incr++) {
+        //Send nibbles
+        //(value >> (4 * (3 - incr))) bit shifts the value in the order of 12,8,4,0
+        //(16 * (4 - incr)) gets the modulo of the bit shifted in the order of 16,32,48,64
+        Segs_Normal(startAddr + incr, (value >> (4 * (3 - incr))) % (16 * (4 - incr)), Segs_DP_OFF);
     }
 }
