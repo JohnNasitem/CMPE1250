@@ -80,7 +80,7 @@ void Segs_Clear(void) {
     int incr;
 
     for(incr = 0; incr < 8; incr++) {
-        Segs_Custom(incr, 0b00000000);
+        Segs_Custom(incr, 0b10000000);
     }
 }
 

@@ -3,8 +3,8 @@
 // Processor:     MC9S12XDP512
 // Bus Speed:     40 MHz
 // Author:        John N. Nasitem
-// Details:
-// Date:          Date Created
+// Details:       Messing around with segs
+// Date:          Apr 6, 2024
 // Revision History :
 //  each revision will have a date + desc. of changes
 
@@ -36,7 +36,19 @@ void Tier3(void);
 /********************************************************************/
 // Global Variables
 /********************************************************************/
-
+int passCounter = 0;                                            //How many times a "pass" has happened
+int positionChanges = 0x0;                                     //How many times the position of caret has moved
+int counter = 0;                                                //Current index of the frame of the animation
+int index = 0;                                                  //Index of the caret position
+int hexCounter = 0x0;                                           //Incremented counter in hex
+unsigned char AnimationFrames[] = {                             //The animation frames
+    0b11000000,
+    0b10100000,
+    0b10010000,
+    0b10000001,
+    0b10001000,
+    0b10000010
+};
 /********************************************************************/
 // Constants
 /********************************************************************/
@@ -76,47 +88,142 @@ void main(void)
 
   for (;;)
   {
-    Tier1();
+    //Tier1();
     //Tier2();
-    //Tier3();
+    Tier3();
   }
 }
 
 /********************************************************************/
 // Functions
 /********************************************************************/
-void Tier1()          //make functions have an external counter so its not reset each call or add a inf loop
+void Tier1()
 {
-  int counter = 0x0;
-
+  //Checks if center button is pressed
   if (SWL_Pushed(SWL_CTR))
   {
+    //Creates delay and clears previous frame
     RTI_Delay_ms(100);
     Segs_Clear();
 
-    Segs_16H(counter, Segs_LineTop);
-    Segs_16H(0xFFFF - counter++, Segs_LineBottom);
+    //Counts up on top line and counts down on bottom line
+    Segs_16H(hexCounter, Segs_LineTop);
+    Segs_16H(0xFFFF - hexCounter++, Segs_LineBottom);
   }
 }
 
 void Tier2() {
-  int counter = 0;
-  int index = 0;
-  unsigned char AnimationFrames[] = {
-    0b11000000,
-    0b10100000,
-    0b10010000,
-    0b10000001,
-    0b10001000,
-    0b10000010,
-  }
+  char moved = 0;                                             //if the caret moved postions
+
+  //Creates delay and clears previous frame
   RTI_Delay_ms(100);
+  Segs_Clear();
 
-  Segs_Custom(index, AnimationFrames[counter++])
+  //Increment pass
+  passCounter++;
 
-  //add movement every 10 passes
+  //Checks if the passCounter passed over 10 times
+  if (passCounter >= 9) {
+    //Checks if right/left switch has been pressed and if it can move in that direction
+    if (SWL_Pushed(SWL_RIGHT) && index < 3) {
+      //Increment index and set moved to true
+      index++;
+      moved = 1;
+    }
+    else if (SWL_Pushed(SWL_LEFT) && index > 0) {
+      //deincrement index and set moved to true
+      index--;
+      moved = 1;
+    }
 
-  if (counter == 5) counter = 0;
+    //If the caret has moved then increment positionChanges
+    if (moved) {
+      positionChanges++;
+      moved = 0;
+    }
+
+    //Reset passCounter
+    passCounter = 0;
+  }
+
+  //Display carat and how many times the carat moved
+  Segs_Custom(index, AnimationFrames[counter++]);
+  Segs_16H(positionChanges, Segs_LineBottom);
+
+  //Reset counter
+  if (counter == 6) counter = 0;
+}
+
+void Tier3() {
+  char moved = 0;                                                   //if the carat has moved
+  char beenPressedRight = 0;                                        //if right has been pressed
+  char beenPressedLeft = 0;                                         //if left has been pressed
+
+  //Creates delay and clears previous frame
+  RTI_Delay_ms(100);
+  Segs_Clear();
+
+  //If right is pressed set beenPressedRight
+  if (SWL_Pushed(SWL_RIGHT)) {
+    //if beenPressedLeft is true then reset passCount and beenPressedLeft
+    if (beenPressedLeft) {
+      beenPressedLeft = 0;
+      passCounter = 0;
+    }
+    beenPressedRight = 1;
+  }
+  //if not then unset it
+  else {
+    beenPressedRight = 0;
+  }
+
+  //If left is pressed set beenPressedLeft
+  if (SWL_Pushed(SWL_LEFT)) {
+    //if beenPressedRight is true then reset passCount and beenPressedRight
+    if (beenPressedRight) {
+      beenPressedRight = 0;
+      passCounter = 0;
+    }
+    beenPressedLeft = 1;
+  }
+  //if not then unset it
+  else {
+    beenPressedLeft = 0;
+  }
+
+  //if either is press then increment passCount if not then reset it
+  if (beenPressedRight || beenPressedLeft) passCounter++;
+  else passCounter = 0;
+
+  //if counter has reached 10 passes attempt to move carat
+  if (passCounter >= 9) {
+
+    //Checks if right/left switch has been pressed and if it can move in that direction
+    if (beenPressedRight && index < 3) {
+      index++;
+      moved = 1;
+    }
+    else if (beenPressedLeft && index > 0) {
+      index--;
+      moved = 1;
+    }
+
+    //If the caret has moved then increment positionChanges
+    if (moved) {
+      positionChanges++;
+      moved = 0;
+    }
+
+    //Reset passCounter
+    passCounter = 0;
+  }
+
+  //Display carat and how many times the carat moved
+  Segs_Custom(index, AnimationFrames[counter++]);
+  Segs_16H(positionChanges, Segs_LineBottom);
+
+  //Reset counter
+  if (counter == 6) counter = 0;
 }
 /********************************************************************/
 // Interrupt Service Routines
