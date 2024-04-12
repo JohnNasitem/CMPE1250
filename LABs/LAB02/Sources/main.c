@@ -46,6 +46,7 @@ void main(void)
   // Any main local variables must be declared here
   int RTIPasses = 0;
   int dpIndex = 4;
+  int hexUsed = 0;
   // main entry point
   _DISABLE_COP();
   // EnableInterrupts;
@@ -58,11 +59,6 @@ void main(void)
   Segs_Init();
   SWL_Init();
 
-  //ISR
-  DDRJ &= 0b00000000;
-  PPSJ &= 0b00000000;
-  PIEJ |= 0b11111111;
-
   Segs_Clear();
   Segs_16D(0, Segs_LineTop);
 
@@ -72,15 +68,19 @@ void main(void)
 
   for (;;)
   {
-    RTI_Delay_ms(50);
-    RTIPasses++;
-    SWL_TOG(SWL_RED);
-
-    //if (SWL_Pushed(SWL_CTR)) counter = 0;
+    //Best place to put it because its the first thing that gets checked
+    if (SWL_Pushed(SWL_CTR)) counter = 0;
     /* Ask for clarification
       If the CTR switch is pushed, reset the count back to zero. This code will be positioned in the
       main loop, outside of any constructs related to operating the RTI.
     */
+   else if (SWL_Pushed(SWL_UP)) hexUsed = 1;
+   else if (SWL_Pushed(SWL_DOWN)) hexUsed = 0;
+
+
+    RTI_Delay_ms(50);
+    RTIPasses++;
+    SWL_TOG(SWL_RED);
 
     if (RTIPasses % 4 == 0) Segs_Custom(dpIndex++, 0b00000000);
 
@@ -92,10 +92,11 @@ void main(void)
 
       SWL_TOG(SWL_GREEN);
       Segs_ClearLine(Segs_LineBottom);
-      Segs_16D(counter, Segs_LineTop);
-
       dpIndex = 4;
     }
+
+    if (hexUsed) Segs_16H(counter, Segs_LineTop);
+    else Segs_16D(counter, Segs_LineTop);
   }
 }
 
@@ -106,14 +107,3 @@ void main(void)
 /********************************************************************/
 // Interrupt Service Routines
 /********************************************************************/
-//maybe put reset here in an interrupt
-interrupt VectorNumber_Vportj void Vportj_ISR(void)           //get this to work
-{
-  PIFJ |= 0b00000000;
-  //CRGFLG = CRGFLG_RTIF_MASK; //clear flag;
-  SWL_ON(SWL_YELLOW);
-  if (SWL_Pushed(SWL_CTR)) {
-    counter = 0;
-    Segs_16D(counter, Segs_LineTop);
-  }
-} 
