@@ -130,6 +130,6 @@ void Segs_ClearLine(Segs_LineOption line) {
     //Iterate through each digit in the line
     for (incr = 0; incr < 4; incr++) {
         //Clear digit
-        Segs_Custom(startAddr * incr, 0b10000000);
+        Segs_Custom(startAddr + incr, 0b10000000);
     }
 }
