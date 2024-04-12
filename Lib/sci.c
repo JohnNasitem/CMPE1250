@@ -76,7 +76,7 @@ int sci0_Peek (void) {
     return 0;
 }
 
-void sci0_GotoXY (int iCol, int iRow) {             //Doesnt work and idk why
+void sci0_GotoXY (int iCol, int iRow) {
     char buffer[20] = "";
     sprintf(buffer, "\x1b[%d;%dH", iRow, iCol);
     sci0_txStr(buffer);
