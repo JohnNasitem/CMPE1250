@@ -1,6 +1,7 @@
 #include <hidef.h>      /* common defines and macros */
 #include "derivative.h" /* derivative-specific definitions */
 #include "segs.h"
+#include <math.h>
 
 /********************************************************************/
 // Local Helpers
@@ -104,5 +105,31 @@ void Segs_16H (unsigned int value, Segs_LineOption line) {
         //(value >> (4 * (3 - incr))) bit shifts the value in the order of 12,8,4,0
         //(16 * (4 - incr)) gets the modulo of the bit shifted in the order of 16,32,48,64
         Segs_Normal(startAddr + incr, (value >> (4 * (3 - incr))) % (16 * (4 - incr)), Segs_DP_OFF);
+    }
+}
+
+void Segs_16D (unsigned int value, Segs_LineOption line) {
+    int startAddr = 4 * line;
+    int incr;
+
+    //Iterate through each nibble
+    for (incr = 0; incr < 4; incr++) {
+        //Send nibbles
+        Segs_Normal(startAddr + incr, (unsigned int)(value / pow(10, 3 - incr)) % 10, Segs_DP_OFF);
+    }
+}
+
+void Segs_ClearDigit(unsigned char addr) {
+    Segs_Custom(addr, 0b10000000);
+}
+
+void Segs_ClearLine(Segs_LineOption line) {
+    int startAddr = 4 * line;
+    int incr;
+
+    //Iterate through each digit in the line
+    for (incr = 0; incr < 4; incr++) {
+        //Clear digit
+        Segs_Custom(startAddr * incr, 0b10000000);
     }
 }
