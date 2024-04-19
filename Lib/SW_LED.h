@@ -78,7 +78,7 @@ void SWL_TOG (SWL_LEDColour led);
 int SWL_Pushed (SWL_SwitchPos pos);
 
 // is a spefific switch being held (T/F)
-int SWL_Held (SWL_SwitchPos pos);
+//nt SWL_Held (SWL_SwitchPos pos);
 
 
 // is any switch being pushed (T/F)

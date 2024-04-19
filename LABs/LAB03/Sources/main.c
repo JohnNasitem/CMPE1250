@@ -21,6 +21,7 @@
 // Other system includes or your includes go here
 #include <stdlib.h>
 #include <stdio.h>
+#include <math.h>
 
 /********************************************************************/
 // Defines
@@ -44,10 +45,12 @@ int counter = 0;
 void main(void)
 {
   // Any main local variables must be declared here
-  int RTIPasses = 0;
-  int dpIndex = 4;
-  int hexUsed = 0;
   int buttonPressed = -1;
+  int lastButtonPressed = -1;
+  unsigned char valueArr[] = {0, 0, 0, 0};
+  int value = 0;
+  unsigned char edittingIndex = 0;
+  int incr = 0;
   /*
     0 = up
     1 = down
@@ -75,39 +78,38 @@ void main(void)
 
   for (;;)
   {
-    
-   /* if (SWL_Pushed(SWL_CTR)) counter = 0;
-   else if (SWL_Pushed(SWL_UP)) hexUsed = 1;
-   else if (SWL_Pushed(SWL_DOWN)) hexUsed = 0;
-   else if (SWL_Pushed(SWL_RIGHT)) hexUsed = 1;
-   else if (SWL_Pushed(SWL_LEFT)) hexUsed = 0;
-
-
     RTI_Delay_ms(50);
-    RTIPasses++;
-    SWL_TOG(SWL_RED);
 
-    if (RTIPasses % 4 == 0) Segs_Custom(dpIndex++, 0b00000000);
-
-    //1 second has passed
-    if (RTIPasses >= 20) {
-      RTIPasses = 0;
-      counter++;
-      if (counter > 9999) counter = 0;
-
-      SWL_TOG(SWL_GREEN);
-      Segs_ClearLine(Segs_LineBottom);
-      dpIndex = 4;
+    if (SWL_Pushed(SWL_UP) && buttonPressed != 0) {
+      buttonPressed = 0;
+      valueArr[edittingIndex]++;
+      if (valueArr[edittingIndex] > 9) valueArr[edittingIndex] = 0;
     }
 
-    Segs_16D(counter, Segs_LineTop);
-    Segs_16H(counter, Segs_LineBottom); */
+    if (SWL_Pushed(SWL_DOWN) && buttonPressed != 1) {
+      buttonPressed = 1;
+      valueArr[edittingIndex]--;
+      if (valueArr[edittingIndex] < 0) valueArr[edittingIndex] = 9;
+    }
 
-    if (SWL_Held(SWL_UP)) SWL_ON(SWL_RED);
-    else SWL_OFF(SWL_RED);
+    if (SWL_Pushed(SWL_LEFT) && buttonPressed != 2) {
+      buttonPressed = 2;
+      edittingIndex--;
+      if (edittingIndex < 0) edittingIndex = 0;
+    }
 
-    if (SWL_Pushed(SWL_UP)) SWL_ON(SWL_GREEN);
-    else SWL_OFF(SWL_GREEN);
+    if (SWL_Pushed(SWL_LEFT) && buttonPressed != 3) {
+      buttonPressed = 3;
+      edittingIndex++;
+      if (edittingIndex > 3) edittingIndex = 3;
+    }
+    
+    for (incr = 0; incr < 3; incr++) {
+      value += valueArr[incr] * pow(10, 3 - incr);
+    }
+
+    Segs_16D(value, Segs_LineTop);
+    Segs_16H(value, Segs_LineBottom);
   }
 }
 

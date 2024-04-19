@@ -10,7 +10,7 @@
     3 = left
     4 = up
 */
-unsigned char oldStates[] = {0, 0, 0, 0, 0};
+//unsigned char oldStates[] = {0, 0, 0, 0, 0};
 
 void SWL_Init (void) {
     PT1AD1 &= 0x1F;
@@ -34,7 +34,7 @@ int SWL_Pushed (SWL_SwitchPos pos) {
     return PT1AD1 & pos;
 }
 
-int SWL_Held (SWL_SwitchPos pos) {
+/* int SWL_Held (SWL_SwitchPos pos) {
     int pressedButtonIndex = -1;
 
     switch (pos) {
@@ -68,4 +68,4 @@ int SWL_Held (SWL_SwitchPos pos) {
         oldStates[pressedButtonIndex] = 0;
         return 0;
     }
-}
+} */
