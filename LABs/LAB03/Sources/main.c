@@ -51,11 +51,11 @@ void main(void)
     2 = left
     3 = right
   */
-  int buttonPressed = -1;
-  char valueArr[] = {0, 0, 0, 0};
-  int value = 0;
-  unsigned char edittingIndex = 3;
-  int incr = 0;
+  int buttonPressed = -1;                                                               //which button was last pressed
+  char valueArr[] = {0, 0, 0, 0};                                                       //Value of each digit
+  int value = 0;                                                                        //Combine version of valueArr[]
+  unsigned char edittingIndex = 3;                                                      //Index of digit being editted
+  int incr = 0;                                                                         //increment
   // main entry point
   _DISABLE_COP();
   // EnableInterrupts;
@@ -69,17 +69,16 @@ void main(void)
   SWL_Init();
 
   Segs_Clear();
-  Segs_16D(0, Segs_LineTop);
-
   /********************************************************************/
   // main program loop
   /********************************************************************/
 
   for (;;)
   {
+    //Delay 50ms
     RTI_Delay_ms(50);
-    value = 0;
 
+    //Check for up button press only allowing 1 run if held
     if (SWL_Pushed(SWL_UP) && buttonPressed != 0) {
       buttonPressed = 0;
       valueArr[edittingIndex]++;
@@ -87,6 +86,7 @@ void main(void)
     }
     else if (!SWL_Pushed(SWL_UP) && buttonPressed == 0) buttonPressed = -1;
 
+    //Check for down button press only allowing 1 run if held
     if (SWL_Pushed(SWL_DOWN) && buttonPressed != 1) {
       buttonPressed = 1;
       valueArr[edittingIndex]--;
@@ -94,26 +94,31 @@ void main(void)
     }
     else if (!SWL_Pushed(SWL_DOWN) && buttonPressed == 1) buttonPressed = -1;
 
+    //Check for left button press only allowing 1 run if held
     if (SWL_Pushed(SWL_LEFT) && buttonPressed != 2 && edittingIndex > 0) {
       buttonPressed = 2;
       edittingIndex--;
     }
     else if (!SWL_Pushed(SWL_LEFT) && buttonPressed == 2) buttonPressed = -1;
 
+    //Check for up button press only allowing 1 run if held
     if (SWL_Pushed(SWL_RIGHT) && buttonPressed != 3 && edittingIndex < 3) {
       buttonPressed = 3;
       edittingIndex++;
     }
     else if (!SWL_Pushed(SWL_RIGHT) && buttonPressed == 3) buttonPressed = -1;
     
-
+    //Reset value
+    value = 0;
+    //Calculate value from valueArr
     for (incr = 0; incr < 4; incr++) {
       value += valueArr[incr] * pow(10, 3 - incr);
-      //Segs_Normal(incr, valueArr[incr], Segs_DP_OFF);
     }
 
+    //Display value in decimal and in hex
     Segs_16D(value, Segs_LineTop);
     Segs_16H(value, Segs_LineBottom);
+    //Add dp to digit being editted
     Segs_Normal(edittingIndex, valueArr[edittingIndex], Segs_DP_ON);
   }
 }
