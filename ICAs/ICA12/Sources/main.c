@@ -13,6 +13,8 @@
 /********************************************************************/
 #include <hidef.h>      /* common defines and macros */
 #include "derivative.h" /* derivative-specific definitions */
+#include "clock.h"
+#include "lcd.h"
 
 // Other system includes or your includes go here
 #include <stdlib.h>
@@ -47,6 +49,7 @@ void main(void)
   /********************************************************************/
   // one-time initializations
   /********************************************************************/
+  Clock_EnableOutput(ClockOutDiv2);
 
   /********************************************************************/
   // main program loop

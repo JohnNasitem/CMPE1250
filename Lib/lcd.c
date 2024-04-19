@@ -26,7 +26,7 @@
 
 // wait for the LCD to be not busy (blocking)
 // service function, private
-unsigned char lcd_Busy (void) {
+void lcd_Busy (void) {
     unsigned char inVal = 0;
 
     lcd_RSDown;
@@ -40,6 +40,8 @@ unsigned char lcd_Busy (void) {
         lcd_EDown
     }
     while (inVal & 0x80);
+}
 
-    return inVal;
+void lcd_Init (void) {
+    
 }
