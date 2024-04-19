@@ -45,18 +45,17 @@
 void main(void)
 {
   // Any main local variables must be declared here
-  int buttonPressed = -1;
-  int lastButtonPressed = -1;
-  unsigned char valueArr[] = {0, 0, 0, 0};
-  int value = 0;
-  unsigned char edittingIndex = 0;
-  int incr = 0;
   /*
     0 = up
     1 = down
     2 = left
     3 = right
   */
+  int buttonPressed = -1;
+  char valueArr[] = {0, 0, 0, 0};
+  int value = 0;
+  unsigned char edittingIndex = 3;
+  int incr = 0;
   // main entry point
   _DISABLE_COP();
   // EnableInterrupts;
@@ -79,33 +78,38 @@ void main(void)
   for (;;)
   {
     RTI_Delay_ms(50);
+    value = 0;
 
     if (SWL_Pushed(SWL_UP) && buttonPressed != 0) {
       buttonPressed = 0;
       valueArr[edittingIndex]++;
-      if (valueArr[edittingIndex] > 9) valueArr[edittingIndex] = 0;
+      if (valueArr[edittingIndex] == 10) valueArr[edittingIndex] = 0;
     }
+    else if (!SWL_Pushed(SWL_UP) && buttonPressed == 0) buttonPressed = -1;
 
     if (SWL_Pushed(SWL_DOWN) && buttonPressed != 1) {
       buttonPressed = 1;
       valueArr[edittingIndex]--;
-      if (valueArr[edittingIndex] < 0) valueArr[edittingIndex] = 9;
+      if (valueArr[edittingIndex] == -1) valueArr[edittingIndex] = 9;
     }
+    else if (!SWL_Pushed(SWL_DOWN) && buttonPressed == 1) buttonPressed = -1;
 
-    if (SWL_Pushed(SWL_LEFT) && buttonPressed != 2) {
+    if (SWL_Pushed(SWL_LEFT) && buttonPressed != 2 && edittingIndex > 0) {
       buttonPressed = 2;
       edittingIndex--;
-      if (edittingIndex < 0) edittingIndex = 0;
     }
+    else if (!SWL_Pushed(SWL_LEFT) && buttonPressed == 2) buttonPressed = -1;
 
-    if (SWL_Pushed(SWL_LEFT) && buttonPressed != 3) {
+    if (SWL_Pushed(SWL_RIGHT) && buttonPressed != 3 && edittingIndex < 3) {
       buttonPressed = 3;
       edittingIndex++;
-      if (edittingIndex > 3) edittingIndex = 3;
     }
+    else if (!SWL_Pushed(SWL_RIGHT) && buttonPressed == 3) buttonPressed = -1;
     
-    for (incr = 0; incr < 3; incr++) {
+
+    for (incr = 0; incr < 4; incr++) {
       value += valueArr[incr] * pow(10, 3 - incr);
+      //Segs_Normal(incr, valueArr[incr], Segs_DP_OFF);
     }
 
     Segs_16D(value, Segs_LineTop);
