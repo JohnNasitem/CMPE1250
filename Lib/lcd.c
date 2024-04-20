@@ -168,6 +168,7 @@ void lcd_AddrXY (unsigned char iy, unsigned char ix) {
         lcd_Addr(0);
     }
     else {
+        //Check with row is given then add the correct amount to column
         switch (ix) {
             case 0:
             lcd_Addr(iy);
@@ -189,23 +190,27 @@ void lcd_AddrXY (unsigned char iy, unsigned char ix) {
 }
 
 void lcd_StringXY (unsigned char iy, unsigned char ix, char const * const straddr) {
+    //Go to xy
     lcd_AddrXY(iy, ix);
+    //Write string
     lcd_String(straddr);
 }
 
 void lcd_DispControl (unsigned char curon, unsigned char blinkon) {
-    unsigned char cCommand;
+    unsigned char cCommand = 0b00001100;
     /* Display controls (last 4 bits)
         Display control commands
         Display: HIGH for on
         Cursor: HIGH for on
         Blink: LOW for off
     */
-    cCommand = 0b00001100;
 
+    //if cursor is 1 then turn on cursor
     if (curon) cCommand |= 2;
+    //if blink is 1 then turn on blink
     if (blinkon) cCommand |= 1;
 
+    //Send command
     lcd_Ctrl(cCommand);
 }
 
@@ -215,5 +220,6 @@ void lcd_Clear (void) {\
 }
 
 void lcd_Home (void) {
+    //Go to 0,0
     lcd_Addr(0);
 }
