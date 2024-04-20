@@ -50,6 +50,9 @@ void main(void)
   // one-time initializations
   /********************************************************************/
   Clock_EnableOutput(ClockOutDiv2);
+  lcd_Init();
+
+  lcd_Data('Q');
 
   /********************************************************************/
   // main program loop
@@ -57,7 +60,7 @@ void main(void)
 
   for (;;)
   {
-    
+
   }
 }
 
